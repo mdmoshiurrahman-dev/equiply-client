@@ -109,7 +109,7 @@ export function SignInForm() {
       {/* Social providers */}
       <div className="flex flex-col gap-3.5">
         <GoogleButton />
-        <LinkedInButton />
+        {/* <LinkedInButton /> */}
       </div>
     </div>
   );
