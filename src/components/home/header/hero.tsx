@@ -12,7 +12,7 @@ const IMAGE_DELAY = 200;
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-heading" className="py-14 sm:py-16 lg:py-20">
+    <section  aria-labelledby="hero-heading" className="py-14  sm:py-16 lg:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Left — copy */}
         <div>
@@ -53,7 +53,7 @@ export function Hero() {
               Explore Equipment
             </Button>
             <Button
-              render={<Link href="/how-it-works" />}
+              render={<Link href="#how_it_works" />}
               nativeButton={false}
               variant="secondary"
               size="lg"

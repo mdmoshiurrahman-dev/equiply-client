@@ -27,12 +27,13 @@ const STEPS = [
 export function ProcessSection() {
   return (
     <section
+      id="how_it_works"
       aria-labelledby="process-heading"
       className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16"
     >
       {/* Left: section heading */}
       <div className="flex border-b border-zinc-400 flex-col">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/80">
+        <p  className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/80">
           The Process
         </p>
 
