@@ -4,6 +4,7 @@ import { RentalStatusBadge } from "./rental-status-badge";
 import { EquipmentRentalPaymentRecord } from "@/types/type";
 import { cn } from "cn";
 import Link from "next/link";
+import { NoRentalFallback } from "./no-rental-fallback";
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "short",
@@ -29,39 +30,45 @@ export function RentalTableBody({
 }) {
   return (
     <TableBody>
-      {rentalRecord.map((request, index) => (
-        <TableRow
-          key={request._id}
-          className={cn("border-b", index % 2 === 1 && "bg-muted/60")}
-        >
-          <TableCell className="font-medium text-center text-foreground">
-            {request.productName}
-          </TableCell>
-          <TableCell className="text-center">
-            <RenterInfo
-              name={request.paymentRequestName}
-              email={request.paymentRequestEmail}
-            />
-          </TableCell>
-          <TableCell className="text-center text-foreground">
-            {formatDateRange(request.rentalStartDate, request.rentalEndDate)}
-          </TableCell>
-          <TableCell className="text-center text-foreground">
-            {formatAmount(request.total)}
-          </TableCell>
-          <TableCell className="text-center">
-            <RentalStatusBadge status={request.payment as "paid" | "pending"} />
-          </TableCell>
-          <TableCell className="text-center">
-            <Link
-              href={`/dashboard/provider/rentals/payment-info/${request._id}`}
-              className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
-            >
-              View Details
-            </Link>
-          </TableCell>
-        </TableRow>
-      ))}
+      {rentalRecord.length === 0 ? (
+        <NoRentalFallback />
+      ) : (
+        rentalRecord.map((request, index) => (
+          <TableRow
+            key={request._id}
+            className={cn("border-b", index % 2 === 1 && "bg-muted/60")}
+          >
+            <TableCell className="font-medium text-center text-foreground">
+              {request.productName}
+            </TableCell>
+            <TableCell className="text-center">
+              <RenterInfo
+                name={request.paymentRequestName}
+                email={request.paymentRequestEmail}
+              />
+            </TableCell>
+            <TableCell className="text-center text-foreground">
+              {formatDateRange(request.rentalStartDate, request.rentalEndDate)}
+            </TableCell>
+            <TableCell className="text-center text-foreground">
+              {formatAmount(request.total)}
+            </TableCell>
+            <TableCell className="text-center">
+              <RentalStatusBadge
+                status={request.payment as "paid" | "pending"}
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Link
+                href={`/dashboard/provider/rentals/payment-info/${request._id}`}
+                className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+              >
+                View Details
+              </Link>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
     </TableBody>
   );
 }
