@@ -8,7 +8,8 @@ export default async function AdminUsersPage() {
   await connection();
   const session = await loadUserSessionFromServerComponent();
   const jwt = await jwtToken();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/all-users`, {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  const res = await fetch(`${baseUrl}/all-users`, {
     headers: {
       Authorization: `Bearer ${session?.session.token}`,
       "jwt-token": `Bearer ${jwt}`,
