@@ -154,7 +154,7 @@ export function BookingDialog({
                 You cannot rent more than the available quantity.
               </p>
             )}
-            {requiredQuantity === 0 && (
+            {requiredQuantity <= 0 && (
               <p className="text-sm text-destructive">
                 Please enter a quantity greater than zero.
               </p>
@@ -255,9 +255,9 @@ export function BookingDialog({
               }
               type="submit"
               size="lg"
-              className={`flex-1 ${requiredQuantity > Number(equipment.equipmentQuantity) || requiredQuantity === 0 || loading ? "bg-zinc-300 cursor-not-allowed" : ""}`}
+              className={`flex-1 ${requiredQuantity > Number(equipment.equipmentQuantity) || requiredQuantity <= 0 || loading ? "bg-zinc-300 cursor-not-allowed" : ""}`}
             >
-              {loading ? <Spinner /> : <span>Book Now</span> }
+              {loading ? <Spinner /> : <span>Book Now</span>}
             </Button>
           </DialogFooter>
           <p className="text-center text-xs text-muted-foreground">
