@@ -1,7 +1,5 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-
-/** "OR CONTINUE WITH" divider shown between the form and social buttons. */
 export function AuthDivider({
   label = "Or continue with",
   className,
