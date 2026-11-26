@@ -1,0 +1,88 @@
+import type { FavoriteEquipment } from "@/types/type";
+
+/**
+ * Sample data used until the favorites API endpoint is available.
+ * Swap the source in `src/app/dashboard/renter/favorites/page.tsx` once ready.
+ */
+export const favoritesData: FavoriteEquipment[] = [
+  {
+    _id: "fav-001",
+    equipmentId: "eq-001",
+    equipmentName: "Excavator XE220",
+    equipmentCategory: "Excavator",
+    equipmentPrice: 250,
+    rentalType: "Daily",
+    equipmentLocation: "New York, NY",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-002",
+    equipmentId: "eq-002",
+    equipmentName: "Generator 100kW",
+    equipmentCategory: "Generator",
+    equipmentPrice: 120,
+    rentalType: "Daily",
+    equipmentLocation: "Chicago, IL",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-003",
+    equipmentId: "eq-003",
+    equipmentName: "Forklift FD30",
+    equipmentCategory: "Forklift",
+    equipmentPrice: 180,
+    rentalType: "Daily",
+    equipmentLocation: "Dallas, TX",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-004",
+    equipmentId: "eq-004",
+    equipmentName: "Skid Steer Loader",
+    equipmentCategory: "Loader",
+    equipmentPrice: 200,
+    rentalType: "Daily",
+    equipmentLocation: "Los Angeles, CA",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-005",
+    equipmentId: "eq-005",
+    equipmentName: "Boom Lift 45ft",
+    equipmentCategory: "Aerial Lift",
+    equipmentPrice: 300,
+    rentalType: "Daily",
+    equipmentLocation: "Miami, FL",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-006",
+    equipmentId: "eq-006",
+    equipmentName: "Air Compressor 185CFM",
+    equipmentCategory: "Compressor",
+    equipmentPrice: 90,
+    rentalType: "Daily",
+    equipmentLocation: "Seattle, WA",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-007",
+    equipmentId: "eq-007",
+    equipmentName: "Concrete Mixer 350L",
+    equipmentCategory: "Mixer",
+    equipmentPrice: 75,
+    rentalType: "Daily",
+    equipmentLocation: "Houston, TX",
+    isAvailable: true,
+  },
+  {
+    _id: "fav-008",
+    equipmentId: "eq-008",
+    equipmentName: "Plate Compactor 20kN",
+    equipmentCategory: "Compactor",
+    equipmentPrice: 60,
+    rentalType: "Daily",
+    equipmentLocation: "Denver, CO",
+    isAvailable: false,
+  },
+];
