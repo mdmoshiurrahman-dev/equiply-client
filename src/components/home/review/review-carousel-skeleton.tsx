@@ -6,14 +6,12 @@ const CARDS_PER_PAGE = 3;
 function ReviewCardSkeleton() {
   return (
     <figure className="flex flex-col rounded-xl border border-border bg-muted/40 p-5">
-      {/* Star rating strip */}
       <div className="flex items-center gap-1" aria-hidden="true">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="size-4 rounded-sm" />
         ))}
       </div>
 
-      {/* Review text */}
       <div className="mt-4 flex-1 space-y-2" aria-hidden="true">
         <Skeleton className="h-3.5 w-full" />
         <Skeleton className="h-3.5 w-[92%]" />
