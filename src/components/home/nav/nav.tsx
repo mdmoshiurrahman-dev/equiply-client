@@ -59,13 +59,12 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
     </div>
   );
 
-  const showForApproval = (): ReactNode => {
+  const showForApproval = () => {
     toast.add({
       type: "warning",
       title: "Please wait until your process approve",
       description: "If you think something is wrong please contract us",
     });
-    return null;
   };
 
   return (
