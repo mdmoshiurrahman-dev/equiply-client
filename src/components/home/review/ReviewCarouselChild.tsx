@@ -82,12 +82,9 @@ export function ReviewCarouselChild({ reviews }: { reviews: IReview[] }) {
         See what people say about renting equipment through our platform.
       </p>
 
-      {/* Featured quote card — keyed remount drives the fade-in */}
       <div className="mt-8 sm:mt-10" aria-live="polite">
-        {/* <FeaturedCard review={featured} /> */}
       </div>
 
-      {/* Prev / next controls */}
       <div className="mt-5 flex justify-end gap-2">
         <Button
           type="button"

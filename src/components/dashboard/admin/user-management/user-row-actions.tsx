@@ -19,12 +19,12 @@ export function UserRowActions({ user }: { user: UserData }) {
   const handelAdminAction = async (
     action: "delete" | "admin" | "renter" | "provider",
   ) => {
-    if (user._id.toString() === session.data?.user.id.toString()) {
-      return toast.add({
-        type: "error",
-        description: "Something is wrong",
-      });
-    }
+    // if (user._id.toString() !== session.data?.user.id.toString()) {
+    //   return toast.add({
+    //     type: "error",
+    //     description: "Something is wrong",
+    //   });
+    // }
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin-action-user/${user._id}/${action}`,
       {

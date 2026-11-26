@@ -24,7 +24,6 @@ export default function Home() {
       <WhyChooseUs />
 
       <ReviewSection />
-      {/* The process — bottom of the customer stories section */}
       <div className="my-16 sm:my-24">
         <ProcessSection />
       </div>

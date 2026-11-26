@@ -13,15 +13,3 @@ export const loadUserSessionFromServerComponent = async () => {
   }
   return session;
 };
-
-export const getOptionalUserSession = async () => {
-  await connection();
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    return session;
-  } catch {
-    return null;
-  }
-};

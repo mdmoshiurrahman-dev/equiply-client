@@ -16,7 +16,7 @@ export function EquipmentManagement({equipmentData}:{equipmentData:EquipmentAppl
 
       <Card className="gap-0 overflow-hidden py-0">
         <div className="border-b p-4">
-          <FilterToolbar />
+          {/* <FilterToolbar /> */}
         </div>
 
         <EquipmentTable equipment={equipmentData} />

@@ -44,7 +44,6 @@ export default function ProfilePageChild({
       ...submissionData,
       user_image: imageUrl || userData.user_image,
     };
-    console.log(payload);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/update-profile-info`,
       {

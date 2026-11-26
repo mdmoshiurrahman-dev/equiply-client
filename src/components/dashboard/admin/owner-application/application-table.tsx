@@ -14,24 +14,20 @@ import NoApplications from "./NoApplicationFallback";
 export async function ApplicationsTable() {
   const session = await loadUserSessionFromServerComponent();
 
-  let ownerApplications: UserApplication[] = [];
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-all-applicant-data`,
-      {
-        headers: {
-          authorization: `Bearer ${session?.session.token}`,
-        },
-        signal: AbortSignal.timeout(8000),
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-all-applicant-data`,
+    {
+      headers: {
+        authorization: `Bearer ${session?.session.token}`,
       },
-    );
-    if (res.ok) {
-      ownerApplications = await res.json();
-    }
-  } catch (err) {
-    console.error("Failed to fetch applicant data:", err);
+      signal: AbortSignal.timeout(8000),
+    },
+  );
+  if (!res.ok) {
+    console.error("Failed to fetch applicant data:");
   }
 
+  const ownerApplications: UserApplication[] = await res.json();
   return ownerApplications.length > 0 ? (
     <Table className="min-w-5xl  text-sm">
       <TableHeader>

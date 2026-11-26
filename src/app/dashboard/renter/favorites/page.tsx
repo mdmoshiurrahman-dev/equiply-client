@@ -10,20 +10,19 @@ export const metadata = {
 
 export default async function FavoritesPage() {
   const session = await loadUserSessionFromServerComponent();
-  let favorites: EquipmentApplicationType[] = [];
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/get-fev-equipments`, {
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-fev-equipments`,
+    {
       headers: {
         Authorization: `Bearer ${session.session.token}`,
       },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (response.ok) {
-      favorites = await response.json();
-    }
-  } catch (err) {
-    console.error("Failed to load favorites:", err);
+    },
+  );
+  if (!response.ok) {
+    console.error("Failed to load favorites");
   }
+  const favorites: EquipmentApplicationType[] = await response.json();
   return (
     <div className="flex flex-col gap-8">
       <FavoritesHeader itemCount={favorites.length} />

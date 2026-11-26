@@ -24,10 +24,8 @@ type SidebarUserDetails = {
 
 export function SidebarUser({
   user,
-  profileHref,
 }: {
   user: SidebarUserDetails;
-  profileHref: string;
 }) {
   const router = useRouter();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -58,7 +56,7 @@ export function SidebarUser({
         }
       >
         <Avatar className="size-11">
-          {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="" />}
+          {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="user logo" />}
           <AvatarFallback className="bg-neutral-200 text-neutral-700">
             <UserRound className="size-7" aria-hidden="true" />
           </AvatarFallback>
@@ -86,14 +84,6 @@ export function SidebarUser({
         <div className="truncate px-2 py-1.5 text-xs text-muted-foreground">
           {user.email}
         </div>
-
-        <DropdownMenuItem
-          render={<Link href={profileHref} />}
-          onClick={() => setOpenMobile(false)}
-        >
-          <Settings />
-          Account settings
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
           <LogOut />

@@ -343,11 +343,7 @@ client/
 │   │   └── utils.ts
 │   └── types/
 │       └── type.ts
-├── .dev.log                           # Tracked dev-server log (artifact)
 ├── .gitignore
-├── .next-dev.log                      # Tracked dev-server log (artifact)
-├── .root.css                          # Captured dev CSS output (artifact)
-├── .served.css                        # Captured dev CSS output (artifact)
 ├── components.json
 ├── eslint.config.mjs
 ├── next-env.d.ts
@@ -358,7 +354,7 @@ client/
 └── tsconfig.json
 ```
 
-> `.env`, `.env.local`, `.next/`, `node_modules/`, and `*.tsbuildinfo` are omitted. `.dev.log`, `.next-dev.log`, `.root.css`, and `.served.css` are tracked development artifacts, not application source; remove and ignore them in a cleanup PR.
+> `.env`, `.env.local`, `.next/`, `node_modules/`, `*.tsbuildinfo`, `.dev.log`, `.next-dev.log`, `.root.css`, and `.served.css` are omitted from source control.
 
 ### Folder reference
 

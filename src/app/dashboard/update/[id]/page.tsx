@@ -9,23 +9,19 @@ export default async function UpdateEquipmentPage({
 }) {
   const { id } = await params;
   const session = await loadUserSessionFromServerComponent();
-  let equipmentData: EquipmentApplicationType = {} as EquipmentApplicationType;
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-details/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.session.token}`,
-        },
-        signal: AbortSignal.timeout(8000),
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-details/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.session.token}`,
       },
-    );
-    if (res.ok) {
-      equipmentData = await res.json();
-    }
-  } catch (err) {
-    console.error("Failed to load equipment details for update:", err);
+    },
+  );
+  if (!res.ok) {
+    console.error("Failed to load equipment details for update");
   }
+  const equipmentData: EquipmentApplicationType = await res.json();
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div className="flex flex-col gap-1">
@@ -36,7 +32,7 @@ export default async function UpdateEquipmentPage({
           Update your listed equipment details below to get started.
         </p>
       </div>
-      <UpdateEquipmentApplication equipmentData ={equipmentData} />
+      <UpdateEquipmentApplication equipmentData={equipmentData} />
     </div>
   );
 }

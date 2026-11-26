@@ -13,23 +13,19 @@ export const metadata: Metadata = {
 export default async function EquipmentPage() {
   await connection();
   const session = await loadUserSessionFromServerComponent();
-  let equipmentData: EquipmentApplicationType[] = [];
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/all-equipment-application`,
-      {
-        headers: {
-          Authorization: `Bearer ${session?.session.token}`,
-        },
-        signal: AbortSignal.timeout(8000),
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/all-equipment-application`,
+    {
+      headers: {
+        Authorization: `Bearer ${session?.session.token}`,
       },
-    );
-    if (res.ok) {
-      equipmentData = await res.json();
-    }
-  } catch (error) {
-    console.error("Failed to fetch equipment applications:", error);
+    },
+  );
+  if (!res.ok) {
+    console.error("Failed to fetch equipment applications:");
   }
- 
+
+  const equipmentData: EquipmentApplicationType[] = await res.json();
   return <EquipmentManagement equipmentData={equipmentData} />;
 }

@@ -36,7 +36,6 @@ export function AddEquipmentForm() {
       creationDate: new Date(),
       equipmentImage: imageUrl,
     };
-    console.log(payload)
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-application`,
       {

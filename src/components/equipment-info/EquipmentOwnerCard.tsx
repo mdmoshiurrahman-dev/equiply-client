@@ -13,29 +13,18 @@ export async function EquipmentOwnerCard({
   session?: { session?: { token?: string } } | null;
 }) {
   const token = session?.session?.token;
-  let userInfo: providerProfileDataForPublic = {
-    name: "Equipment Owner",
-    email: "Contact via platform",
-    account_type: "provider",
-    tel_no: "Not available",
-    business_address: equipment.equipmentLocation || "Not specified",
-    user_image: "",
-  };
 
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-user-data/${equipment.creatorId}`,
-      {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        signal: AbortSignal.timeout(8000),
-      },
-    );
-    if (res.ok) {
-      userInfo = await res.json();
-    }
-  } catch (err) {
-    console.error("Failed to load owner data:", err);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-user-data/${equipment.creatorId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+
+  if (!res.ok) {
+    console.error("Failed to load owner data:");
   }
+  const userInfo: providerProfileDataForPublic = await res.json();
   return (
     <section className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">

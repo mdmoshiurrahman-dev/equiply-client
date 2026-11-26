@@ -1,9 +1,6 @@
 import type { ComponentType } from "react";
 import type { LucideIcon } from "lucide-react";
 
-/* -------------------------------------------------------------------------- */
-/*                              Users & profiles                              */
-/* -------------------------------------------------------------------------- */
 
 export interface UserApplication {
   _id: string;
@@ -81,10 +78,6 @@ export interface User {
   role: UserRole;
   joinedLabel: string;
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                  Equipment                                 */
-/* -------------------------------------------------------------------------- */
 
 export type EquipmentStatus = "pending" | "approve" | "reject";
 
@@ -261,16 +254,13 @@ export interface EquipmentRentalPaymentRecord {
 
 export interface RentalRequest {
   id: string;
-  /** Equipment title shown in the first column, e.g. "Caterpillar 336 Excavator - #CAT336A" */
   equipment: string;
   renter: {
     name: string;
     email: string;
   };
-  /** ISO date strings, e.g. "2026-11-24" */
   startDate: string;
   endDate: string;
-  /** Total amount in BDT */
   totalAmount: number;
   status: RentalStatus;
 }
@@ -293,34 +283,29 @@ export interface RentalStat {
 }
 
 export interface RentalPaymentDetail {
-  /** e.g. "RENTAL-9F7E-3B2A" */
   rentalId: string;
-  // Equipment information
+
   equipmentName: string;
   equipmentId: string;
   pricePerUnit: number;
   requiredQuantity: number;
-  // Renter information
+
   renterName: string;
   renterEmail: string;
   renterContactNumber: string;
-  // Rental schedule
+ 
   rentalStartDate: string;
   rentalEndDate: string;
   rentalDurationDays: number;
-  // Delivery information
+
   deliveryAddress: string;
   additionalNotes: string;
-  // Payment summary
   totalAmount: number;
   paymentStatus: RentalPaymentStatus;
   paymentDate: string;
   paymentRequestId: string;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                  Reviews                                   */
-/* -------------------------------------------------------------------------- */
 
 export interface IReview {
   _id: string;
@@ -341,9 +326,6 @@ export interface Review {
   avatarUrl: string;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                          Home / navigation / sidebar                       */
-/* -------------------------------------------------------------------------- */
 
 export interface NavLinkItem {
   href: string;
@@ -379,11 +361,6 @@ export interface translationAnalysisData {
   failed: number;
   total: number;
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                   Misc                                     */
-/* -------------------------------------------------------------------------- */
-
 export interface ApplicationStat {
   label: string;
   value: number;

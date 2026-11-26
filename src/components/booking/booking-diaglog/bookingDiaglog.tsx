@@ -55,7 +55,7 @@ export function BookingDialog({
       },
       body: JSON.stringify({
         ...data,
-        productName: equipment.equipmentName || "Rental Product",
+        productName: equipment.equipmentName,
         equipmentId: equipment._id,
         rentalDays,
         paymentDate: new Date().toISOString().split("T")[0],

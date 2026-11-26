@@ -9,6 +9,8 @@ import { UpdateEquipmentRentalTermsSection } from "./update-equipment-rental-ter
 import { uploadImage } from "@/lib/action/uploadImage";
 import { EquipmentApplicationType } from "@/types/type";
 import { useSession } from "@/lib/auth-client";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export function UpdateEquipmentApplication({
   equipmentData,
@@ -16,10 +18,12 @@ export function UpdateEquipmentApplication({
   equipmentData: EquipmentApplicationType;
 }) {
   const session = useSession();
+  const [loading, setLoading] = useState(false);
   const handelUpdateEquipmentApplication = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     const image = formData.get("equipmentImage");
@@ -32,7 +36,7 @@ export function UpdateEquipmentApplication({
       ...data,
       equipmentImage: imageUrl,
     };
-    await fetch(
+    const result = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-application/update/${equipmentData._id}`,
       {
         method: "PUT",
@@ -43,6 +47,9 @@ export function UpdateEquipmentApplication({
         body: JSON.stringify(payload),
       },
     );
+    if (result) {
+      setLoading(false);
+    }
   };
   return (
     <form
@@ -69,8 +76,12 @@ export function UpdateEquipmentApplication({
           >
             Cancel
           </Button>
-          <Button type="submit" className="flex-1 sm:flex-none">
-            Save Changes
+          <Button
+            disabled={loading}
+            type="submit"
+            className="flex-1 sm:flex-none"
+          >
+            {loading ? <Spinner /> : "Save Changes"}
           </Button>
         </div>
       </div>

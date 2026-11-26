@@ -2,24 +2,18 @@ import { ArrowRight } from "lucide-react";
 import { EquipmentCard } from "@/components/equipment/equipment-card";
 import type { RentalEquipmentPublicInfo } from "@/types/type";
 
-/** Number of equipment items shown in the featured section. */
 export async function FeaturedEquipment() {
-  let allRentalEquipments: RentalEquipmentPublicInfo[] = [];
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/latest-rental-equipments`,
-      {
-        next: { revalidate: 60 },
-        signal: AbortSignal.timeout(8000),
-      },
-    );
-    if (res.ok) {
-      allRentalEquipments = await res.json();
-    }
-  } catch (err) {
-    console.error("Failed to load featured equipment:", err);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/latest-rental-equipments`,
+    {
+      next: { revalidate: 60 },
+    },
+  );
+  if (!res.ok) {
+    console.error("Failed to load featured equipment:");
   }
 
+  const allRentalEquipments: RentalEquipmentPublicInfo[] = await res.json();
   return (
     <section
       aria-labelledby="featured-equipment-heading"

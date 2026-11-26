@@ -37,7 +37,6 @@ export function AppSidebar() {
               role: roleLabels[role as "renter" | "admin" | "provider"],
               avatarUrl: session.data?.user.image ?? undefined,
             }}
-            profileHref={`/dashboard/${role}/profile`}
           />
         </SidebarFooter>
       </div>
