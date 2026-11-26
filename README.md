@@ -1,7 +1,7 @@
 # Equiply — Equipment Rental Marketplace
 
 <p align="center">
-  <img src="./public/banner_image.jpeg" alt="Equiply equipment rental marketplace" width="820" />
+  <img src="https://i.ibb.co/05VdjJJ/Screenshot-From-2026-11-27-02-12-55.png" alt="Screenshot From 2026 11 27 02 12 55" border="0" width=820>
 </p>
 
 <p align="center">
@@ -15,6 +15,7 @@
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript" />
   <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4.3-06B6D4?logo=tailwindcss" />
   <img alt="Better Auth" src="https://img.shields.io/badge/Better_Auth-1.7-000000" />
+  <img alt="JWT" src="https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens" />
   <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-7.9-47A248?logo=mongodb" />
   <img alt="Stripe" src="https://img.shields.io/badge/Stripe-23.2-635BFF?logo=stripe" />
 </p>
@@ -24,7 +25,7 @@
   <a href="https://github.com/mdmoshiurrahman-dev/equiply-back-end">Backend repository</a>
 </p>
 
-> **Scope:** This repository is the **client application only**. Authentication is handled here by **Better Auth**, which writes its user, session, and account records to MongoDB. Equipment data, bookings, favorites, reviews, and Stripe Checkout sessions are owned by the separate **Express + MongoDB + Stripe** backend. The backend has its own README with the full API contract.
+> **Scope:** This repository is the **client application only**. Authentication is handled here by **Better Auth**, with JWT support enabled for protected backend requests. Better Auth writes its user, session, and account records to MongoDB. Equipment data, bookings, favorites, reviews, and Stripe Checkout sessions are owned by the separate **Express + MongoDB + Stripe** backend. The backend has its own README with the full API contract.
 
 ---
 
@@ -109,6 +110,7 @@ This repository contains the complete **Next.js frontend**:
 ### Accounts and onboarding
 
 - Email/password sign-up and sign-in through Better Auth.
+- JWT issuance through the Better Auth JWT plugin for authenticated Express API requests.
 - Google OAuth sign-in; new social users are routed to account-type selection.
 - Zod + React Hook Form validation on the sign-up form: name length, valid email, password strength, and confirm-password match.
 - Remember-me option, password visibility toggles, social divider, and toast feedback.
@@ -165,7 +167,8 @@ This repository contains the complete **Next.js frontend**:
 | Language | [TypeScript](https://www.typescriptlang.org/) | `^5`, strict mode |
 | Styling | [Tailwind CSS](https://tailwindcss.com/) | `4.3.3`, CSS-first configuration |
 | Component system | [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) | `base-nova`, `@base-ui/react` `1.9` |
-| Auth | [Better Auth](https://www.better-auth.com/) | `1.7.25`, MongoDB adapter |
+| Auth | [Better Auth](https://www.better-auth.com/) | `1.7.25`, MongoDB adapter, JWT plugin |
+| Tokens | JWT / Bearer authentication | Session tokens for sessions; JWT tokens for protected backend authorization |
 | Database driver | [MongoDB](https://www.mongodb.com/) | `7.9.0` |
 | Payments | [Stripe](https://stripe.com/) | `stripe` `23.2`, hosted Checkout (server-driven) |
 | Image uploads | [ImgBB](https://api.imgbb.com/) | REST upload from the browser |
@@ -193,7 +196,7 @@ This repository contains the complete **Next.js frontend**:
 flowchart LR
   Browser["Browser"]
   Next["Next.js 16 App Router<br/>Server Components + client islands"]
-  Auth["Better Auth<br/>/api/auth/[...all]"]
+  Auth["Better Auth + JWT<br/>/api/auth/[...all]"]
   DB[("MongoDB<br/>database: Equiply")]
   API["Express 5 API<br/>NEXT_PUBLIC_API_BASE_URL"]
   Stripe["Stripe Checkout"]
@@ -216,7 +219,8 @@ flowchart LR
 - **Client Components** (`"use client"`) handle forms, dialogs, filters, charts, the sidebar, the theme toggle, and session hooks.
 - Protected server pages call `loadUserSessionFromServerComponent()`, which reads the Better Auth session from request headers and redirects unauthenticated users to `/sign-in`.
 - Role dashboards are wrapped by `RoleGuard`, which redirects users without the exact role to `/unauthorized`.
-- Client-side mutations use `useSession()` to obtain the session token, then call the backend with `Authorization: Bearer <token>`.
+- Client-side mutations use `useSession()` and `jwtTokenClient()` to obtain the session and JWT tokens. Protected backend requests send the session token in `Authorization: Bearer <token>` and the JWT in `jwt-token: Bearer <token>`.
+- Server Components use `jwtToken()` to call `auth.api.getToken()` and obtain a JWT from the current request headers.
 - Public catalog requests do not send an auth header.
 
 ### Data ownership
@@ -378,8 +382,10 @@ client/
 
 | File | Purpose |
 | --- | --- |
-| `src/lib/auth.ts` | Better Auth server configuration: MongoDB adapter, Google provider, email/password, and the additional `role` field. |
-| `src/lib/auth-client.ts` | Browser auth client with inferred additional fields; exports `signIn`, `signUp`, `signOut`, `useSession`. |
+| `src/lib/auth.ts` | Better Auth server configuration: MongoDB adapter, JWT plugin, Google provider, email/password, JWT cookie cache, and the additional `role` field. |
+| `src/lib/auth-client.ts` | Browser auth client with inferred additional fields and `jwtClient`; exports `signIn`, `signUp`, `signOut`, `useSession`. |
+| `src/lib/core/jwtToken.ts` | Server-only JWT helper that calls `auth.api.getToken()` using the current request headers. |
+| `src/lib/core/jwtTokenClient.ts` | Client-side JWT helper that calls `authClient.token()`. |
 | `src/lib/core/loadUserSessionFromServerComponent.ts` | Reads the session in Server Components and redirects to `/sign-in` when absent. |
 | `src/lib/core/requreRole.ts` | Small server-side role helper (`isAuthorized`) retained alongside the `RoleGuard` implementation. |
 | `src/components/dashboard/role-guard.tsx` | Suspense-wrapped exact-role guard that redirects mismatches to `/unauthorized`. |
@@ -740,7 +746,7 @@ npm run lint
 | Variable | Required | Scope | Used by | Description |
 | --- | --- | --- | --- | --- |
 | `MONGO_DB_CONNECT` | Yes | Server | `src/lib/auth.ts` | MongoDB connection string. Better Auth selects the `Equiply` database. |
-| `BETTER_AUTH_SECRET` | Yes | Server | Better Auth | Secret used to sign/encrypt auth data. Generate with `openssl rand -base64 32`. |
+| `BETTER_AUTH_SECRET` | Yes | Server | Better Auth / JWT | Secret used to sign/encrypt auth data and issue JWT-backed authentication. Generate with `openssl rand -base64 32`. |
 | `BETTER_AUTH_URL` | Yes | Public | `src/lib/auth-client.ts`, Better Auth | Canonical origin of the app, e.g. `http://localhost:3000`. OAuth and cookies depend on it. |
 | `NEXT_PUBLIC_API_BASE_URL` | Yes | Public | All backend fetches | Base URL of the Express API, e.g. `http://localhost:5000`. |
 | `GOOGLE_CLIENT_ID` | For Google sign-in | Server | `src/lib/auth.ts` | Google OAuth client ID. |
@@ -993,10 +999,11 @@ sequenceDiagram
 
 ## Backend API Integration
 
-Base URL: `NEXT_PUBLIC_API_BASE_URL`. Protected requests send:
+Base URL: `NEXT_PUBLIC_API_BASE_URL`. Protected requests send both the Better Auth session token and the JWT issued by Better Auth:
 
 ```http
 Authorization: Bearer <session.token>
+jwt-token: Bearer <jwt.token>
 ```
 
 | Area | Endpoints used by the client |
@@ -1132,6 +1139,8 @@ Preview URLs differ from production. Google OAuth and `BETTER_AUTH_URL` may need
 - `NEXT_PUBLIC_IMGBB_API_KEY` is bundled into client JavaScript by design. Use a restricted key with quota monitoring and rotate it if abused.
 - `next.config.ts` currently accepts remote images from **any HTTPS hostname**. Narrow `images.remotePatterns` to ImgBB and your own domains for production.
 - UI role guards are a UX layer. The Express API must continue to validate the Bearer token and authorization rules.
+- JWT and session tokens must be sent only over HTTPS. Do not expose `BETTER_AUTH_SECRET` or JWT signing configuration to browser code.
+- The backend should validate the JWT signature, expiration, issuer/audience when configured, and the user's role before permitting protected operations.
 - Better Auth stores session data in MongoDB. Use HTTPS in production so auth cookies are transmitted securely.
 - The client never handles card numbers; Stripe Checkout is hosted by Stripe.
 - `src/lib/stripe.js` uses `server-only`, but it is not imported today. Keep Stripe secret keys server-side.
@@ -1210,4 +1219,4 @@ Do not rename these without a coordinated refactor: `contract-us`, `add-equepmen
 
 ---
 
-<p align="center">Built with Next.js, React, TypeScript, Tailwind CSS, Better Auth & MongoDB.</p>
+<p align="center">Built with Next.js, React, TypeScript, Tailwind CSS, Better Auth, JWT & MongoDB.</p>
