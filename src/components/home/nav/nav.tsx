@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import LogOut from "@/components/auth/logout/LogOut";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/toast";
 
 interface NavProps {
   logo?: ReactNode;
@@ -36,8 +37,6 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
       <ThemeToggle />
       {userSession.isPending ? (
         <>
-          {/* Skeleton placeholder — avoids Login/Register flashing before
-              the authenticated actions swap in. */}
           <Skeleton className="ml-1 h-4 w-12 sm:ml-2 sm:w-14" />
           <Skeleton className="h-9 w-24 rounded-lg px-5" />
         </>
@@ -60,6 +59,15 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
     </div>
   );
 
+  const showForApproval = (): ReactNode => {
+    toast.add({
+      type: "warning",
+      title: "Please wait until your process approve",
+      description: "If you think something is wrong please contract us",
+    });
+    return null;
+  };
+
   return (
     <header className={cn("w-full", className)}>
       <nav
@@ -71,7 +79,6 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
           {/* Left — logo */}
           <div className="flex items-center">{logo ?? <Logo />}</div>
 
-          {/* Center — desktop links */}
           <ul className="hidden items-center gap-4 lg:gap-8 md:flex">
             {links.map((link) => (
               <li key={link.href}>
@@ -84,19 +91,28 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
             ))}
             {userSession.isPending ? (
               <li aria-hidden="true">
-                {/* Skeleton chip — avoids the Dashboard link popping in and
-                    shifting the rest of the nav once the session resolves. */}
                 <Skeleton className="h-4 w-20" />
               </li>
             ) : (
               userSession.data?.user &&
               role && (
                 <li>
-                  <NavLink
-                    label="Dashboard"
-                    active={pathname === `/dashboard/${role}`}
-                    href={`/dashboard/${role}`}
-                  />
+                  {role === "admin" ||
+                  role === "provider" ||
+                  role === "renter" ? (
+                    <NavLink
+                      label="Dashboard"
+                      active={pathname === `/dashboard/${role}`}
+                      href={`/dashboard/${role}`}
+                    />
+                  ) : (
+                    <button
+                      onClick={showForApproval}
+                      className="inline-flex cursor-pointer items-center text-sm font-medium text-muted-foreground hover:text-foreground"
+                    >
+                      Dashboard
+                    </button>
+                  )}
                 </li>
               )
             )}
