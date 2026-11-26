@@ -18,7 +18,6 @@ export async function EquipmentInfoMain({ id }: { id: string }) {
   await connection();
   const session = await loadUserSessionFromServerComponent();
   const token = session?.session?.token;
-
   const fevRes = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-favorite/${id}`,
     {

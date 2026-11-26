@@ -9,31 +9,21 @@ export async function EquipmentGrid({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   await connection();
-  let queryString = "";
-  try {
-    const searchParamsObj = await searchParams;
-    queryString = new URLSearchParams(
-      searchParamsObj as Record<string, string>,
-    ).toString();
-  } catch {
-    queryString = "";
-  }
+  const searchParamsObj = await searchParams;
+  const queryString = new URLSearchParams(
+    searchParamsObj as Record<string, string>,
+  ).toString();
 
-  let allRentalEquipments: RentalEquipmentPublicInfo[] = [];
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/all-application-public?${queryString}`,
-      {
-        signal: AbortSignal.timeout(8000),
-      },
-    );
-    if (res.ok) {
-      allRentalEquipments = await res.json();
-    }
-  } catch (error) {
-    console.error("Failed to fetch equipment:", error);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/all-application-public?${queryString}`,
+    {
+      next: { revalidate: 30 },
+    },
+  );
+  if (!res.ok) {
+    console.error("Failed to fetch equipment");
   }
-
+  const allRentalEquipments: RentalEquipmentPublicInfo[] = await res.json();
   return (
     <section
       aria-labelledby="available-equipment-heading"

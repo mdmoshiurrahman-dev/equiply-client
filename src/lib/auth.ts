@@ -1,20 +1,20 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
-
-declare global {
-  var _mongoClient: MongoClient | undefined;
-}
-
+import { jwt } from "better-auth/plugins";
 const uri = process.env.MONGO_DB_CONNECT as string;
-
-if (!global._mongoClient) {
-  global._mongoClient = new MongoClient(uri);
-}
-const client: MongoClient = global._mongoClient;
-
+const client = new MongoClient(uri);
 const db = client.db("Equiply");
+
 export const auth = betterAuth({
+  plugins: [jwt()],
+  session: {
+    cookieCache: {
+      enabled: true,
+      strategy: "jwt",
+      maxAge: 7 * 24 * 60 * 60,
+    },
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
