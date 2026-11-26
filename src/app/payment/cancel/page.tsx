@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
 import { EquipmentRentalPaymentRecord } from "@/types/type";
 import { notFound, redirect } from "next/navigation";
+import { jwtToken } from "@/lib/core/jwtToken";
 
 export const metadata: Metadata = {
   title: "Payment Cancelled — Equiply",
@@ -24,11 +25,13 @@ export default async function PaymentCancelPage({
       notFound()
     }
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-payment-record/${queryString}`,
     {
       headers: {
         Authorization: `Bearer ${session?.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

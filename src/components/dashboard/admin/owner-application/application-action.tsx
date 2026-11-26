@@ -5,6 +5,7 @@ import { UserApplication } from "@/types/type";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 export function ActionButtons({
   application,
@@ -17,11 +18,13 @@ export function ActionButtons({
   const handelUserApplication = async (
     request: "provider" | "dismissRequest",
   ) => {
+    const jwt = await jwtTokenClient();
     const res = await fetch(`${baseApiUrl}/set-user-role/${request}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         authorization: `Bearer ${session?.data?.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
       body: JSON.stringify({ applicantId: application._id }),
     });

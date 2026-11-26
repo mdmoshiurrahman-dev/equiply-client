@@ -5,6 +5,7 @@ import { RentalDelivery } from "./rental-delivery";
 import { PaymentSummary } from "./payment-summary";
 import type { RentalPaymentDetail } from "@/types/type";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { EquipmentRentalPaymentRecord } from "@/types/type";
 
 interface RentalPaymentDetailsProps {
@@ -15,11 +16,13 @@ export async function RentalPaymentDetails({
   recordId
 }: RentalPaymentDetailsProps) {
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-user-payment-record/${recordId}`,
     {
       headers: {
         Authorization: `Bearer ${session.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

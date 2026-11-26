@@ -16,6 +16,7 @@ import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 export function CustomerApplicationForm() {
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
@@ -43,7 +44,7 @@ export function CustomerApplicationForm() {
       applicationDate: new Date(),
       role: "renter",
     };
-
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/update-renter-data`,
       {
@@ -51,6 +52,7 @@ export function CustomerApplicationForm() {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify(payload),
       },

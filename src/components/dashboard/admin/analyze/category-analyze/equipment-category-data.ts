@@ -33,7 +33,9 @@ export async function fetchEquipmentCategoryData(): Promise<EquipmentCategorySli
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/top-six-category`,
-      { signal: AbortSignal.timeout(8000) }
+      {
+        signal: AbortSignal.timeout(8000),
+      },
     );
     if (!res.ok) return [];
     const topSixCategory: TopSixCategory[] = await res.json();

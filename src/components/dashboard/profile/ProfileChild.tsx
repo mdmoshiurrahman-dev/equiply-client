@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 export default function ProfilePageChild({
   userData,
@@ -44,6 +45,7 @@ export default function ProfilePageChild({
       ...submissionData,
       user_image: imageUrl || userData.user_image,
     };
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/update-profile-info`,
       {
@@ -51,6 +53,7 @@ export default function ProfilePageChild({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify(payload),
       },

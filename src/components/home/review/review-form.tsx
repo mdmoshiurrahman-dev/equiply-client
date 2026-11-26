@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 /** Clickable 5-star rating picker for the form. */
 function RatingPicker({
@@ -84,6 +85,7 @@ export function ReviewForm() {
       reviewerImage: session.data?.user.image,
     };
 
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-retting`,
       {
@@ -91,6 +93,7 @@ export function ReviewForm() {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify(payload),
       },

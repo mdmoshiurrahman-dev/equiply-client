@@ -10,7 +10,9 @@ export async function fetchPaymentPerformanceData(): Promise<translationAnalysis
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment-success-failed-rate`,
-      { signal: AbortSignal.timeout(8000) }
+      {
+        signal: AbortSignal.timeout(8000),
+      },
     );
     if (!response.ok) {
       return { total: 0, success: 0, failed: 0 };

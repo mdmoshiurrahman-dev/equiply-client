@@ -1,4 +1,5 @@
 import { UpdateEquipmentApplication } from "@/components/dashboard/update/update-equipment-application";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
 import { EquipmentApplicationType } from "@/types/type";
 
@@ -9,12 +10,13 @@ export default async function UpdateEquipmentPage({
 }) {
   const { id } = await params;
   const session = await loadUserSessionFromServerComponent();
-
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-details/${id}`,
     {
       headers: {
         Authorization: `Bearer ${session.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

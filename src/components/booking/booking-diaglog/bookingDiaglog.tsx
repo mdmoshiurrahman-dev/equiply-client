@@ -21,6 +21,7 @@ import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 export function BookingDialog({
   equipment,
@@ -47,11 +48,13 @@ export function BookingDialog({
     isLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
+    const jwt = await jwtTokenClient();
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.data?.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
       body: JSON.stringify({
         ...data,

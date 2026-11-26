@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { auth } from "../auth";
 
-export const getJwtToken = async () => {
+export const jwtToken = async () => {
   const jwtToken = await auth.api.getToken({
     headers: await headers(),
   });

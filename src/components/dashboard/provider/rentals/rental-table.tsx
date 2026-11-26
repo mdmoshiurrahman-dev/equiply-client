@@ -7,16 +7,19 @@ import {
 } from "@/components/ui/table";
 import { RentalTableBody } from "./TableBody";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { EquipmentRentalPaymentRecord } from "@/types/type";
 
 export async function RentalTable() {
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-payment-record`,
     {
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${session.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

@@ -2,16 +2,19 @@ import { RentalsHeader } from "./rentals-header";
 import { RentalStatsCards } from "./stats-cards";
 import { RentalsTable } from "./rentals-table";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { EquipmentRentalPaymentRecord } from "@/types/type";
 
 export async function RentalsPage() {
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-payment-record-as-admin`,
     {
       headers: {
         Authorization: `Bearer ${session?.session?.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
       signal: AbortSignal.timeout(8000),
     },

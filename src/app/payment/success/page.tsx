@@ -11,6 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@/components/ui/table";
+import { jwtToken } from "@/lib/core/jwtToken";
 // bookingId
 export const metadata: Metadata = {
   title: "Booking Confirmed — Equiply",
@@ -28,11 +29,13 @@ export default async function PaymentSuccessPage({
     .toString()
     .split("=")[1];
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-payment-record/${queryString}`,
     {
       headers: {
         Authorization: `Bearer ${session?.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

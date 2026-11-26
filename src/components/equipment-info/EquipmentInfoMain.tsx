@@ -13,22 +13,30 @@ import type {
 import { OwnerCardSkeleton } from "./equipment-details-skeleton";
 import Image from "next/image";
 import { connection } from "next/server";
+import { jwtToken } from "@/lib/core/jwtToken";
 
 export async function EquipmentInfoMain({ id }: { id: string }) {
   await connection();
   const session = await loadUserSessionFromServerComponent();
   const token = session?.session?.token;
+  const jwt = await jwtToken();
   const fevRes = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-favorite/${id}`,
     {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "jwt-token": `Bearer ${jwt}`,
+      },
     },
   );
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-details/${id}`,
     {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "jwt-token": `Bearer ${jwt}`,
+      },
     },
   );
 
@@ -64,7 +72,7 @@ export async function EquipmentInfoMain({ id }: { id: string }) {
 
       <section className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
         <Suspense fallback={<OwnerCardSkeleton />}>
-          <EquipmentOwnerCard equipment={equipment} session={session} />
+          <EquipmentOwnerCard equipment={equipment} session={session} jwt={jwt} />
         </Suspense>
         <EquipmentRentalTerms equipment={equipment} />
       </section>

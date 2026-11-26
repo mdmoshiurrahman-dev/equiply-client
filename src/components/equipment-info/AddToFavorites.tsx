@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Heart } from "lucide-react";
 import type { favoriteExistenceType } from "@/types/type";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
+
 const AddToFavorites = ({
   session,
   id,
@@ -15,6 +17,7 @@ const AddToFavorites = ({
   const [fallback, setFallback] = useState(favoriteExistence.found);
   const handelFavorite = async () => {
     setFallback(!fallback);
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/add-to-favorite`,
       {
@@ -22,6 +25,7 @@ const AddToFavorites = ({
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${(session as { session?: { token?: string } })?.session?.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify({ id }),
       },

@@ -1,4 +1,5 @@
 import { EquipmentManagement } from "@/components/dashboard/admin/equipment/equipment-management";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
 import { EquipmentApplicationType } from "@/types/type";
 import type { Metadata } from "next";
@@ -13,12 +14,13 @@ export const metadata: Metadata = {
 export default async function EquipmentPage() {
   await connection();
   const session = await loadUserSessionFromServerComponent();
-
+  const jwt = await jwtToken();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/all-equipment-application`,
     {
       headers: {
         Authorization: `Bearer ${session?.session.token}`,
+         "jwt-token": `Bearer ${jwt}`,
       },
     },
   );

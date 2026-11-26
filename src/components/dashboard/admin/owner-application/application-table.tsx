@@ -8,17 +8,20 @@ import {
 } from "@/components/ui/table";
 import { ActionButtons } from "./application-action";
 import { loadUserSessionFromServerComponent } from "@/lib/core/loadUserSessionFromServerComponent";
+import { jwtToken } from "@/lib/core/jwtToken";
 import { UserApplication } from "@/types/type";
 import NoApplications from "./NoApplicationFallback";
 
 export async function ApplicationsTable() {
   const session = await loadUserSessionFromServerComponent();
+  const jwt = await jwtToken();
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-all-applicant-data`,
     {
       headers: {
         authorization: `Bearer ${session?.session.token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
       signal: AbortSignal.timeout(8000),
     },

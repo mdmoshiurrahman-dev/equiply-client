@@ -11,6 +11,8 @@ import { EquipmentApplicationType } from "@/types/type";
 import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
+import { toast } from "@/components/ui/toast";
 
 export function UpdateEquipmentApplication({
   equipmentData,
@@ -36,6 +38,7 @@ export function UpdateEquipmentApplication({
       ...data,
       equipmentImage: imageUrl,
     };
+    const jwt = await jwtTokenClient();
     const result = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-application/update/${equipmentData._id}`,
       {
@@ -43,12 +46,23 @@ export function UpdateEquipmentApplication({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify(payload),
       },
     );
     if (result) {
       setLoading(false);
+      toast.add({
+        type: "success",
+        description: "Update Successfully",
+      });
+    } else {
+      setLoading(false);
+      toast.add({
+        type: "error",
+        description: "Something is Wrong",
+      });
     }
   };
   return (

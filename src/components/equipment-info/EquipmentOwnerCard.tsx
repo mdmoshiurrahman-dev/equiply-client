@@ -8,16 +8,21 @@ import {
 export async function EquipmentOwnerCard({
   equipment,
   session,
+  jwt,
 }: {
   equipment: EquipmentApplicationType;
   session?: { session?: { token?: string } } | null;
+  jwt: string | undefined;
 }) {
   const token = session?.session?.token;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get-user-data/${equipment.creatorId}`,
     {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "jwt-token": `Bearer ${jwt}`,
+      },
     },
   );
 

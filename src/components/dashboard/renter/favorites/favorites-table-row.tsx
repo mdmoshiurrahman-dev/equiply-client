@@ -16,6 +16,7 @@ import { toast } from "@/components/ui/toast";
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { EquipmentApplicationType } from "@/types/type";
 import { useSession } from "@/lib/auth-client";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 export function FavoritesTableRow({
   favorite,
@@ -25,12 +26,14 @@ export function FavoritesTableRow({
   const router = useRouter();
   const session = useSession();
   const removeFavorite = async () => {
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete-fev-item/${favorite._id}`,
       {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
       },
     );

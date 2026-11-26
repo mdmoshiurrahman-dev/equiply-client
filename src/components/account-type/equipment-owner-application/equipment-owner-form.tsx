@@ -24,6 +24,7 @@ import { toast } from "@/components/ui/toast";
 import { uploadImage } from "@/lib/action/uploadImage";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 const ACCOUNT_TYPE_OPTIONS = [
   { value: "individual", label: "Individual", id: "1" },
@@ -95,11 +96,13 @@ export function EquipmentOwnerForm({ className }: { className?: string }) {
       route.push("/sign-in");
     }
 
+    const jwt = await jwtTokenClient();
     const res = await fetch(`${baseApiUrl}/update-user-data`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
+        "jwt-token": `Bearer ${jwt}`,
       },
       body: JSON.stringify(payload),
     });

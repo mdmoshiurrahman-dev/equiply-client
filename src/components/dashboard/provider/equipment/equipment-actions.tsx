@@ -6,6 +6,7 @@ import { EquipmentApplicationType } from "@/types/type";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 
 /** Row action buttons: Update / Delete / View Details — pure UI. */
 export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
@@ -15,6 +16,7 @@ export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
   };
   const session = useSession();
   const handelDelete = async () => {
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete-equipment/${item._id}`,
       {
@@ -22,6 +24,7 @@ export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
       },
     );

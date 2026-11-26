@@ -11,6 +11,8 @@ import { CircleEllipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
+
 export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
   const router = useRouter();
   const handelUpdate = () => {
@@ -22,12 +24,14 @@ export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
   };
   const session = useSession();
   const handelDelete = async () => {
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/delete/equipment/${item._id}`,
       {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
       },
     );
@@ -47,12 +51,14 @@ export function EquipmentActions({ item }: { item: EquipmentApplicationType }) {
   };
 
   const adminAction = async (action: "approve" | "reject") => {
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/application-action/${action}/${item._id}`,
       {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
       },
     );

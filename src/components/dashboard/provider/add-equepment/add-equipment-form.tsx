@@ -9,11 +9,16 @@ import { RentalTermsSection } from "./rental-terms-section";
 import { useSession } from "@/lib/auth-client";
 import { uploadImage } from "@/lib/action/uploadImage";
 import { toast } from "@/components/ui/toast";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export function AddEquipmentForm() {
+  const [loading, setLoading] = useState(false);
   const session = useSession();
   const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries()) as {
       equipmentName: string;
@@ -36,6 +41,7 @@ export function AddEquipmentForm() {
       creationDate: new Date(),
       equipmentImage: imageUrl,
     };
+    const jwt = await jwtTokenClient();
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/equipment-application`,
       {
@@ -43,18 +49,21 @@ export function AddEquipmentForm() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
         body: JSON.stringify(payload),
       },
     );
     const result = await res.json();
     if (result.insertedId) {
+      setLoading(false);
       toast.add({
         type: "success",
         title: "Equipment submitted successfully",
         description: "Your equipment has been submitted for admin approval.",
       });
     } else {
+      setLoading(false);
       toast.add({
         type: "error",
         title: "Error submitting equipment",
@@ -87,8 +96,12 @@ export function AddEquipmentForm() {
           >
             Cancel
           </Button>
-          <Button type="submit" className="flex-1 sm:flex-none">
-            Submit Equipment
+          <Button
+            disabled={loading}
+            type="submit"
+            className="flex-1 sm:flex-none"
+          >
+            {loading ? <Spinner /> : "Submit Equipment"}
           </Button>
         </div>
       </div>

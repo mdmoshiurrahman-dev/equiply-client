@@ -12,6 +12,7 @@ import { useSession } from "@/lib/auth-client";
 import { UserData } from "@/types/type";
 import { EllipsisVerticalIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { jwtTokenClient } from "@/lib/core/jwtTokenClient";
 //
 export function UserRowActions({ user }: { user: UserData }) {
   const route = useRouter();
@@ -19,6 +20,7 @@ export function UserRowActions({ user }: { user: UserData }) {
   const handelAdminAction = async (
     action: "delete" | "admin" | "renter" | "provider",
   ) => {
+    const jwt = await jwtTokenClient();
     // if (user._id.toString() !== session.data?.user.id.toString()) {
     //   return toast.add({
     //     type: "error",
@@ -30,6 +32,7 @@ export function UserRowActions({ user }: { user: UserData }) {
       {
         headers: {
           Authorization: `Bearer ${session?.data?.session.token}`,
+          "jwt-token": `Bearer ${jwt}`,
         },
       },
     );
