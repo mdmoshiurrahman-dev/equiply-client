@@ -152,14 +152,25 @@ export function Nav({ logo, links = navLinks, actions, className }: NavProps) {
                   className="rounded-md px-3 py-2.5 hover:bg-muted"
                 />
               ))}
-              {userSession.data?.user && (
-                <NavLink
-                  label="Dashboard"
-                  active={pathname === `/dashboard/${role}`}
-                  className="rounded-md px-3 py-2.5 hover:bg-muted"
-                  href={`/dashboard/${role}`}
-                />
-              )}
+              {userSession.data?.user &&
+                role &&
+                (role === "admin" ||
+                role === "provider" ||
+                role === "renter" ? (
+                  <NavLink
+                    label="Dashboard"
+                    active={pathname === `/dashboard/${role}`}
+                    className="rounded-md px-3 py-2.5 hover:bg-muted"
+                    href={`/dashboard/${role}`}
+                  />
+                ) : (
+                  <button
+                    onClick={showForApproval}
+                    className="inline-flex cursor-pointer items-center rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    Dashboard
+                  </button>
+                ))}
             </div>
             <div className="mt-3 flex gap-3 items-center border-t border-border py-4">
               <ThemeToggle className="ml-6" /> <LogOut />
