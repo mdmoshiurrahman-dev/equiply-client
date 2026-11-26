@@ -49,11 +49,12 @@ export function BookingDialog({
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     const jwt = await jwtTokenClient();
+    const token = session.data?.session.token
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.data?.session.token}`,
+        Authorization: `Bearer ${token}`,
         "jwt-token": `Bearer ${jwt}`,
       },
       body: JSON.stringify({
