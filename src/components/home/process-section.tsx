@@ -50,7 +50,7 @@ export function ProcessSection() {
         </p>
       </div>
 
-      {/* Right: numbered steps */}
+
       <ol className="divide-y divide-border border border-border bg-muted/40">
         {STEPS.map((step) => (
           <li
