@@ -182,7 +182,6 @@ export interface AdminEquipment {
   name: string;
   category: string;
   ownerName: string;
-  /** Optional — shown as a small secondary line under the owner name. */
   ownerEmail?: string;
   /** Rental price per day, in USD. */
   rentalPrice: number;
@@ -200,7 +199,6 @@ export interface ProviderEquipment {
   id: string;
   name: string;
   category: string;
-  /** Daily rental price in BDT (৳). */
   rentalPrice: number;
   availableQuantity: number;
   status: EquipmentStatus;
@@ -218,10 +216,6 @@ export interface FavoriteEquipment {
   equipmentLocation: string;
   isAvailable: boolean;
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                  Rentals                                   */
-/* -------------------------------------------------------------------------- */
 
 export type PaymentStatus = "paid" | "pending";
 
