@@ -3,7 +3,8 @@ import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { jwt } from "better-auth/plugins";
 const uri = process.env.MONGO_DB_CONNECT as string;
-const client = new MongoClient(uri);
+const globalForMongo = globalThis as unknown as { _mongo?: MongoClient };
+const client = (globalForMongo._mongo ??= new MongoClient(uri));
 const db = client.db("Equiply");
 
 export const auth = betterAuth({
@@ -33,7 +34,5 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  database: mongodbAdapter(db, {
-    client,
-  }),
+  database: mongodbAdapter(db),
 });
