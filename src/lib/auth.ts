@@ -2,9 +2,24 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { jwt } from "better-auth/plugins";
-const uri = process.env.MONGO_DB_CONNECT as string;
-const globalForMongo = globalThis as unknown as { _mongo?: MongoClient };
-const client = (globalForMongo._mongo ??= new MongoClient(uri));
+
+const globalForMongo = globalThis as unknown as {
+  _mongo?: MongoClient;
+  _mongoPromise?: Promise<MongoClient>;
+};
+
+const client =
+  globalForMongo._mongo ??
+  new MongoClient(process.env.MONGO_DB_CONNECT as string, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 10000,
+    connectTimeoutMS: 10000,
+  });
+
+globalForMongo._mongo = client;
+globalForMongo._mongoPromise ??= client.connect();
+await globalForMongo._mongoPromise;
+
 const db = client.db("Equiply");
 
 export const auth = betterAuth({
@@ -34,5 +49,5 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  database: mongodbAdapter(db),
+  database: mongodbAdapter(db, { client }),
 });
